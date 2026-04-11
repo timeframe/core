@@ -19,9 +19,11 @@ module TimeframeCore
     end
 
     initializer "timeframe_core.assets" do |app|
-      app.config.assets.paths << root.join("app", "assets", "stylesheets")
-      app.config.assets.paths << root.join("app", "assets", "builds")
-      app.config.assets.paths << root.join("app", "assets", "config")
+      if app.config.respond_to?(:assets)
+        app.config.assets.paths << root.join("app", "assets", "stylesheets")
+        app.config.assets.paths << root.join("app", "assets", "builds")
+        app.config.assets.paths << root.join("app", "assets", "config")
+      end
     end
   end
 end

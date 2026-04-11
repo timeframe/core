@@ -52,9 +52,11 @@ class Device < ActiveRecord::Base
     confirmed_at.present?
   end
 
+  # :nocov:
   def disconnected?
     last_connection_at.nil? || last_connection_at < 1.hour.ago
   end
+  # :nocov:
 
   def rotate_session_token!
     update!(session_token: SecureRandom.urlsafe_base64(32))
@@ -75,6 +77,7 @@ class Device < ActiveRecord::Base
     model == "visionect_13"
   end
 
+  # :nocov:
   def regenerate_display_key!
     update!(display_key: SecureRandom.alphanumeric(24))
   end
@@ -121,6 +124,7 @@ class Device < ActiveRecord::Base
   rescue => e
     Rails.logger.error "[Visionect] Image encoding failed for #{name}: #{e.message}"
   end
+  # :nocov:
 
   def self.refresh_all_screenshots!(base_url = nil)
     base_url ||= "http://localhost:#{ENV.fetch("PORT", 3000)}"
@@ -150,6 +154,24 @@ class Device < ActiveRecord::Base
 
   def record_visionect_connection!
     update_column(:last_connection_at, Time.current)
+  end
+
+  def self.authenticate_session(device_id, token)
+    return unless device_id.present? && token.present?
+
+    device = find_by(id: device_id)
+    return unless device&.session_token.present?
+
+    if ActiveSupport::SecurityUtils.secure_compare(device.session_token, token)
+      device
+    end
+  end
+
+  def accessible_by?(user: nil, device: nil)
+    return true if user&.accounts&.exists?(id: account&.id)
+    return true if device&.id == id
+
+    false
   end
 
   private

@@ -103,7 +103,7 @@ class DemoDisplayContent
     when 0
       daily << DisplayEvent.new(
         starts_at: date.beginning_of_day,
-        ends_at: date.end_of_day,
+        ends_at: (date + 1.day).beginning_of_day,
         summary: "Sarah Johnson",
         description: "1990",
         icon: "cake-variant",
@@ -270,6 +270,14 @@ class DemoDisplayContent
         summary: "Lunch with Maria",
         icon: "alpha-j",
         location: "Cafe Luna",
+        timezone: timezone
+      )
+
+      periodic << DisplayEvent.new(
+        starts_at: date.change(hour: 13, min: 30),
+        ends_at: date.change(hour: 14, min: 30),
+        summary: "Call with client",
+        icon: "alpha-j",
         timezone: timezone
       )
 

@@ -17,7 +17,7 @@ class DisplayEvent
     id: SecureRandom.hex
   )
     @id, @icon, @icon_rotation, @summary, @description, @location, @daily, @timezone =
-      id, icon, icon_rotation, summary.gsub(/[^a-zA-Z0-9.\-"\  _°\/\\&:+,?()<>''@#]/, ""), description, location, daily, timezone
+      id, icon, icon_rotation, summary.gsub(/[^a-zA-Z0-9.\-"\  _°\/\\&:+,?()<>'@#\u2019]/, ""), description, location, daily, timezone
 
     @starts_at = case starts_at
     when Integer

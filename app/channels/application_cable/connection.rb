@@ -13,15 +13,9 @@ class ApplicationCable::Connection < ActionCable::Connection::Base
   private
 
   def find_device_by_session
-    token = request.session[:device_session_token]
-    device_id = request.session[:claimed_device_id]
-    return unless token.present? && device_id.present?
-
-    device = Device.find_by(id: device_id)
-    return unless device&.session_token.present?
-
-    if ActiveSupport::SecurityUtils.secure_compare(device.session_token, token)
-      device
-    end
+    Device.authenticate_session(
+      request.session[:claimed_device_id],
+      request.session[:device_session_token]
+    )
   end
 end

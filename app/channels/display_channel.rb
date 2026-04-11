@@ -5,16 +5,10 @@ class DisplayChannel < ApplicationCable::Channel
     device = Device.find_by(id: params[:device_id])
     return reject unless device
 
-    # Allow if logged-in user owns the device
-    if current_user&.accounts&.exists?(id: device.account&.id)
-      return stream_for device
+    if device.accessible_by?(user: current_user, device: current_device)
+      stream_for device
+    else
+      reject
     end
-
-    # Allow if device session matches
-    if current_device&.id == device.id
-      return stream_for device
-    end
-
-    reject
   end
 end

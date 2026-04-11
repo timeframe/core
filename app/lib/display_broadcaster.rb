@@ -34,7 +34,13 @@ class DisplayBroadcaster
     end
 
     def clear_hash(device_id)
-      @mutex.synchronize { @last_hashes.delete(device_id) }
+      @mutex.synchronize do
+        if device_id == :all
+          @last_hashes.clear
+        else
+          @last_hashes.delete(device_id)
+        end
+      end
     end
 
     private
