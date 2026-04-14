@@ -43,7 +43,7 @@
           </li>
           <% if device.visionect? && device.display_key.present? %>
             <li>
-              <button type="button" class="dropdown-item" onclick="navigator.clipboard.writeText('<%= device.token_display_url(host: request.base_url) %>'); alert('Token URL copied!')">Copy Token URL</button>
+              <button type="button" class="dropdown-item" onclick="var url='<%= device.token_display_url(host: request.base_url) %>'; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(url).then(function() { alert('Token URL copied!'); }); } else { var t=document.createElement('textarea'); t.value=url; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.focus(); t.select(); document.execCommand('copy'); document.body.removeChild(t); alert('Token URL copied!'); }">Copy Token URL</button>
             </li>
             <li>
               <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#regen-device-<%= device.id %>">Regenerate URL</button>
