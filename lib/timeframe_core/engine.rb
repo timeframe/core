@@ -25,5 +25,9 @@ module TimeframeCore
         app.config.assets.paths << root.join("app", "assets", "config")
       end
     end
+
+    initializer "timeframe_core.static_assets" do |app|
+      app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, root.join("public").to_s)
+    end
   end
 end
